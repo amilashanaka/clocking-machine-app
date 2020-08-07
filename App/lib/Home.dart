@@ -10,87 +10,49 @@ class Home extends StatelessWidget {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('ExpansionTile'),
+          title: const Text('Employee List'),
         ),
-        body: ListView.builder(
-          itemBuilder: (BuildContext context, int index) =>
-              EntryItem(data[index]),
-          itemCount: data.length,
-        ),
+        body: BodyLayout(),
       ),
     );
   }
 }
 
-// One entry in the multilevel list displayed by this app.
-class Entry {
-  Entry(this.title, [this.children = const <Entry>[]]);
 
-  final String title;
-  final List<Entry> children;
-}
 
-// The entire multilevel list displayed by this app.
-final List<Entry> data = <Entry>[
-  Entry(
-    'Chapter A',
-    <Entry>[
-      Entry(
-        'Section A0',
-        <Entry>[
-          Entry('Item A0.1'),
-          Entry('Item A0.2'),
-          Entry('Item A0.3'),
-        ],
-      ),
-      Entry('Section A1'),
-      Entry('Section A2'),
-    ],
-  ),
-  Entry(
-    'Chapter B',
-    <Entry>[
-      Entry('Section B0'),
-      Entry('Section B1'),
-    ],
-  ),
-  Entry(
-    'Chapter C',
-    <Entry>[
-      Entry('Section C0'),
-      Entry('Section C1'),
-      Entry(
-        'Section C2',
-        <Entry>[
-          Entry('Item C2.0'),
-          Entry('Item C2.1'),
-          Entry('Item C2.2'),
-          Entry('Item C2.3'),
-        ],
-      ),
-    ],
-  ),
-];
+class BodyLayout extends StatelessWidget {
 
-// Displays one Entry. If the entry has children then it's displayed
-// with an ExpansionTile.
-class EntryItem extends StatelessWidget {
-  const EntryItem(this.entry);
-
-  final Entry entry;
-
-  Widget _buildTiles(Entry root) {
-    if (root.children.isEmpty) return ListTile(title: Text(root.title));
-    return ExpansionTile(
-      key: PageStorageKey<Entry>(root),
-      title: Text(root.title),
-      children: root.children.map(_buildTiles).toList(),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
-    return _buildTiles(entry);
+    return _nameList(context);
   }
 }
+
+Widget _nameList(BuildContext context) {
+
+  final europeanCountries = ['Albania', 'Andorra', 'Armenia', 'Austria',
+    'Azerbaijan', 'Belarus', 'Belgium', 'Bosnia and Herzegovina', 'Bulgaria',
+    'Croatia', 'Cyprus', 'Czech Republic', 'Denmark', 'Estonia', 'Finland',
+    'France', 'Georgia', 'Germany', 'Greece', 'Hungary', 'Iceland', 'Ireland',
+    'Italy', 'Kazakhstan', 'Kosovo', 'Latvia', 'Liechtenstein', 'Lithuania',
+    'Luxembourg', 'Macedonia', 'Malta', 'Moldova', 'Monaco', 'Montenegro',
+    'Netherlands', 'Norway', 'Poland', 'Portugal', 'Romania', 'Russia',
+    'San Marino', 'Serbia', 'Slovakia', 'Slovenia', 'Spain', 'Sweden',
+    'Switzerland', 'Turkey', 'Ukraine', 'United Kingdom', 'Vatican City'];
+
+
+  return ListView.builder(
+    itemCount: europeanCountries.length,
+    itemBuilder: (context, index) {
+      return ListTile(
+        leading: Icon(Icons.account_circle),
+        trailing: Icon(Icons.keyboard_arrow_right),
+        title: Text(europeanCountries[index]),
+        subtitle: Text(europeanCountries[index]),
+      );
+    },
+  );
+}
+
 
