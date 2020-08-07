@@ -10,7 +10,7 @@ class Home extends StatelessWidget {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Employee List'),
+          title: const Text('Staff'),
         ),
         body: BodyLayout(),
       ),
