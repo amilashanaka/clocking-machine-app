@@ -1,7 +1,3 @@
-// Copyright 2017 The Chromium Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
-
 import 'package:flutter/material.dart';
 
 class Home extends StatelessWidget {
@@ -18,11 +14,7 @@ class Home extends StatelessWidget {
   }
 }
 
-
-
 class BodyLayout extends StatelessWidget {
-
-
   @override
   Widget build(BuildContext context) {
     return _nameList(context);
@@ -30,17 +22,59 @@ class BodyLayout extends StatelessWidget {
 }
 
 Widget _nameList(BuildContext context) {
-
-  final europeanCountries = ['Albania', 'Andorra', 'Armenia', 'Austria',
-    'Azerbaijan', 'Belarus', 'Belgium', 'Bosnia and Herzegovina', 'Bulgaria',
-    'Croatia', 'Cyprus', 'Czech Republic', 'Denmark', 'Estonia', 'Finland',
-    'France', 'Georgia', 'Germany', 'Greece', 'Hungary', 'Iceland', 'Ireland',
-    'Italy', 'Kazakhstan', 'Kosovo', 'Latvia', 'Liechtenstein', 'Lithuania',
-    'Luxembourg', 'Macedonia', 'Malta', 'Moldova', 'Monaco', 'Montenegro',
-    'Netherlands', 'Norway', 'Poland', 'Portugal', 'Romania', 'Russia',
-    'San Marino', 'Serbia', 'Slovakia', 'Slovenia', 'Spain', 'Sweden',
-    'Switzerland', 'Turkey', 'Ukraine', 'United Kingdom', 'Vatican City'];
-
+  final europeanCountries = [
+    'Albania',
+    'Andorra',
+    'Armenia',
+    'Austria',
+    'Azerbaijan',
+    'Belarus',
+    'Belgium',
+    'Bosnia and Herzegovina',
+    'Bulgaria',
+    'Croatia',
+    'Cyprus',
+    'Czech Republic',
+    'Denmark',
+    'Estonia',
+    'Finland',
+    'France',
+    'Georgia',
+    'Germany',
+    'Greece',
+    'Hungary',
+    'Iceland',
+    'Ireland',
+    'Italy',
+    'Kazakhstan',
+    'Kosovo',
+    'Latvia',
+    'Liechtenstein',
+    'Lithuania',
+    'Luxembourg',
+    'Macedonia',
+    'Malta',
+    'Moldova',
+    'Monaco',
+    'Montenegro',
+    'Netherlands',
+    'Norway',
+    'Poland',
+    'Portugal',
+    'Romania',
+    'Russia',
+    'San Marino',
+    'Serbia',
+    'Slovakia',
+    'Slovenia',
+    'Spain',
+    'Sweden',
+    'Switzerland',
+    'Turkey',
+    'Ukraine',
+    'United Kingdom',
+    'Vatican City'
+  ];
 
   return ListView.builder(
     itemCount: europeanCountries.length,
@@ -54,5 +88,3 @@ Widget _nameList(BuildContext context) {
     },
   );
 }
-
-

@@ -15,15 +15,12 @@ class Rfid extends StatelessWidget {
 }
 
 class BodyLayout extends StatelessWidget {
-
-
   @override
   Widget build(BuildContext context) {
-
-
-    return  Image.asset(
-      'assets/images/clock.png', width: 500.0, height: 500.0,
+    return Image.asset(
+      'assets/images/clock.png',
+      width: 500.0,
+      height: 500.0,
     );
-
   }
 }
