@@ -8,8 +8,25 @@ The plan is use GraphQL to comunicate with the LB
 ![20200807_144836](https://user-images.githubusercontent.com/8298090/89618303-66e6a980-d8be-11ea-8e58-b9c8680f0098.jpg)
 
 # How to intall test app in your device
+install mobile phone usb driver 
+enable usb debug
+
+connect phone 
+download vs code 
+
+install flutter 
+download git 
+go to folder 
+>flutter run 
+
+
 
 ## Andrioid
+go to folder 
+>flutter run 
+
 
 ## iOS
+
+
 
