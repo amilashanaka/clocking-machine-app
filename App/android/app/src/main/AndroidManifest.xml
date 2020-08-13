@@ -2,6 +2,10 @@
     package="com.example.ClockIN">
 
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.NFC" />
+    <uses-feature
+        android:name="android.hardware.nfc"
+        android:required="true" />
 
     <application
         android:name="io.flutter.app.FlutterApplication"

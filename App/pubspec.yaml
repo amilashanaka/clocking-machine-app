@@ -17,6 +17,8 @@ dependencies:
   font_awesome_flutter: ">= 4.7.0"
   flutter_bloc: ^6.0.1
   dio: ^3.0.10
+  flutter_nfc_reader:
+    path: ../dependencies/flutter-nfc-reader/
 
 dev_dependencies:
   flutter_test:
