@@ -26,7 +26,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   Stream<AuthState> _mapLoginAuthEvent(LoginAuthEvent event) async* {
     try {
       final data = event.user.toMap();
-      Response response = await Dio().post(Const.loginURL, data: data);
+      Response response = await Dio().post(Const.loginUserURL, data: data);
 
       if (response.data["success"]) {
         yield HomePageAuthState(event.user);

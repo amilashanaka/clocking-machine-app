@@ -1,9 +1,5 @@
 import 'package:ClockIN/Animation/FadeAnimation.dart';
-import 'package:ClockIN/Staff.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../blocs/auth_bloc/auth_bloc.dart';
 
 class HomePage extends StatefulWidget {
   @override

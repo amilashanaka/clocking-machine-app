@@ -207,23 +207,32 @@ class LoginPage extends StatelessWidget {
                           : SizedBox.shrink(),
                       FadeAnimation(
                         2,
-                        Container(
-                          height: 50,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            gradient: LinearGradient(
-                              colors: [
-                                Color.fromRGBO(143, 148, 251, 1),
-                                Color.fromRGBO(143, 148, 251, .6),
-                              ],
+                        RaisedButton(
+                          onPressed: () => _onPressedLogin(context),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0)),
+                          padding: const EdgeInsets.all(0.0),
+                          child: Ink(
+                            decoration: const BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [
+                                  Color.fromRGBO(143, 148, 251, 1),
+                                  Color.fromRGBO(143, 148, 251, .6),
+                                ],
+                              ),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0)),
                             ),
-                          ),
-                          child: Center(
-                            child: FlatButton(
-                              textColor: Colors.white,
-                              color: Colors.transparent,
-                              child: Text('Login'),
-                              onPressed: () => _onPressedLogin(context),
+                            child: Container(
+                              constraints: const BoxConstraints(
+                                minHeight: 50.0,
+                              ), // min sizes for Material buttons
+                              alignment: Alignment.center,
+                              child: const Text(
+                                'LOGIN',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(color: Colors.white),
+                              ),
                             ),
                           ),
                         ),
