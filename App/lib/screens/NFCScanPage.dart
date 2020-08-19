@@ -30,15 +30,15 @@ class _NFCScanPageState extends State<NFCScanPage> {
   void _onPressedRead() {
     setState(() => _reading = true);
     FlutterNfcReader.read(instruction: "It's reading")
-        .whenComplete(() => setState(() => _reading = true));
+        .then((value) => setState(() => _reading = true));
   }
 
-  void _onPressedWrite() {
-    setState(() => _reading = false);
-    FlutterNfcReader.write(" ", writerController.text).then((value) {
-      print(value.content);
-    });
-  }
+  // void _onPressedWrite() {
+  //   setState(() => _reading = false);
+  //   FlutterNfcReader.write(" ", writerController.text).then((value) {
+  //     print(value.content);
+  //   });
+  // }
 
   Widget customizedButton(String title, Function onPressed) {
     return SizedBox(
@@ -62,7 +62,7 @@ class _NFCScanPageState extends State<NFCScanPage> {
             constraints: const BoxConstraints(
               minHeight: 50.0,
               minWidth: 50,
-            ), // min sizes for Material buttons
+            ),
             alignment: Alignment.center,
             child: Text(
               title,
@@ -121,10 +121,10 @@ class _NFCScanPageState extends State<NFCScanPage> {
                     padding: EdgeInsets.all(10),
                     child: customizedButton("Read", _onPressedRead),
                   ),
-                  Padding(
-                    padding: EdgeInsets.all(10),
-                    child: customizedButton("Write", _onPressedWrite),
-                  ),
+                  // Padding(
+                  //   padding: EdgeInsets.all(10),
+                  //   child: customizedButton("Write", _onPressedWrite),
+                  // ),
                 ],
               ),
             ),

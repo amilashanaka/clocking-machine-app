@@ -2,11 +2,13 @@ class Staff {
   int id;
   String name;
   String rfid;
+  String pinCode;
 
   Staff({
     this.id,
     this.name,
     this.rfid,
+    this.pinCode,
   });
 
   Map<String, dynamic> toMap() {
@@ -14,6 +16,7 @@ class Staff {
       "id": id ?? 0,
       "name": name ?? "",
       "rfid": rfid ?? "",
+      "pinCode": pinCode ?? ""
     };
   }
 
@@ -22,6 +25,7 @@ class Staff {
       id: int.parse(map["id"].toString()) ?? 0,
       name: map["name"].toString() ?? "",
       rfid: map["rfid"].toString() ?? "",
+      pinCode: map["pinCode"].toString() ?? "",
     );
   }
 }

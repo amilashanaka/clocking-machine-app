@@ -12,13 +12,25 @@ dependencies:
   flutter:
     sdk: flutter
 
-  cupertino_icons: ^0.1.3
-  simple_animations: ^1.3.3
-  font_awesome_flutter: ">= 4.7.0"
-  flutter_bloc: ^6.0.1
-  dio: ^3.0.10
+  cupertino_icons: 0.1.3
+  simple_animations: 1.3.3
+  font_awesome_flutter: 8.8.1
+  flutter_bloc: 6.0.1
+  dio: 3.0.10
+  flutter_spinkit: 4.1.2+1
+  intl: 0.16.1
+  flare_flutter: 2.0.6
+  provider: 4.3.2
+  mdi: 4.0.0
+  camera: 0.5.8+5
+  path: 1.7.0
+  path_provider: 1.6.11
+  uuid: 2.2.0
+
   flutter_nfc_reader:
     path: ../dependencies/flutter-nfc-reader/
+  flutter_clock_helper:
+    path: ../dependencies/flutter_clock_helper/
 
 dev_dependencies:
   flutter_test:
@@ -27,6 +39,16 @@ dev_dependencies:
 flutter:
   uses-material-design: true
 
+  fonts:
+    - family: Comfortaa
+      fonts:
+        - asset: assets/fonts/Comfortaa-Regular.ttf
+    - family: RussoOne
+      fonts:
+        - asset: assets/fonts/RussoOne-Regular.ttf
+
   assets:
     - assets/
     - assets/images/
+    - assets/animate/
+    - assets/fonts/

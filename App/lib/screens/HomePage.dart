@@ -1,4 +1,6 @@
 import 'package:ClockIN/Animation/FadeAnimation.dart';
+import 'package:ClockIN/model/HomeBackground.dart';
+import 'package:ClockIN/screens/StaffAuthPage.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -8,187 +10,110 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   void _onPressedWithCard() {
-    // Navigator.push(
-    //   context,
-    //   MaterialPageRoute(
-    //     builder: (context) => HomePage(),
-    //   ),
-    // );
+    Navigator.push(
+      context,
+      PageRouteBuilder(
+        opaque: false,
+        pageBuilder: (_, __, ___) => StaffAuthPage(),
+      ),
+    );
   }
 
   void _onPressedWithoutCard() {
-    // Navigator.push(
-    //   context,
-    //   MaterialPageRoute(
-    //     builder: (context) => HomePage(),
-    //   ),
-    // );
-    // BlocProvider.of<AuthBloc>(context).add(LogoutAuthEvent());
+    Navigator.push(
+      context,
+      PageRouteBuilder(
+        opaque: false,
+        pageBuilder: (_, __, ___) => StaffAuthPage(manual: true),
+      ),
+    );
+  }
+
+  Future<bool> _willPopCallback() async {
+    return true;
+  }
+
+  Widget _customizedButton(String title, Function onPressed) {
+    return FadeAnimation(
+      2,
+      SizedBox(
+        height: 50,
+        width: 300,
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(10.0)),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.8),
+                spreadRadius: 8,
+                blurRadius: 5,
+                offset: Offset(0, 3),
+              ),
+            ],
+          ),
+          child: RaisedButton(
+            color: Colors.transparent,
+            onPressed: onPressed,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0)),
+            padding: const EdgeInsets.all(0.0),
+            child: Ink(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Color.fromRGBO(143, 163, 251, 1),
+                    Color.fromRGBO(143, 148, 251, .6),
+                  ],
+                ),
+                borderRadius: BorderRadius.all(Radius.circular(10.0)),
+              ),
+              child: Container(
+                constraints: BoxConstraints(
+                  minHeight: 50.0,
+                  minWidth: 50,
+                ),
+                alignment: Alignment.center,
+                child: Text(
+                  title,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/images/home.jpg'),
-            fit: BoxFit.fill,
-          ),
-        ),
-        child: Container(
-          child: Column(
-            children: <Widget>[
-              Container(
-                child: Stack(
-                  children: <Widget>[
-                    Positioned(
-                      left: 30,
-                      width: 80,
-                      height: 200,
-                      child: FadeAnimation(
-                        1,
-                        Container(
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: AssetImage('assets/images/light-1.png'),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      left: 140,
-                      width: 80,
-                      height: 150,
-                      child: FadeAnimation(
-                        1.3,
-                        Container(
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: AssetImage('assets/images/light-2.png'),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      left: 170,
-                      width: 80,
-                      height: 400,
-                      child: FadeAnimation(
-                        1.3,
-                        Container(
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: AssetImage('assets/images/logo.png'),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      right: 40,
-                      top: 40,
-                      width: 80,
-                      height: 150,
-                      child: FadeAnimation(
-                          1.5,
-                          Container(
-                            decoration: BoxDecoration(
-                                image: DecorationImage(
-                                    image:
-                                        AssetImage('assets/images/clock.png'))),
-                          )),
-                    ),
-                    Positioned(
-                      child: FadeAnimation(
-                        1.6,
-                        Container(
-                          margin: EdgeInsets.only(top: 300),
-                          child: Center(
-                            child: Text(
-                              "Welcome",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 40,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      child: FadeAnimation(
-                          1.6,
-                          Container(
-                            margin: EdgeInsets.only(top: 400),
-                            child: Center(
-                              child: Text(
-                                "10:20 AM",
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 40,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                          )),
-                    ),
+    return WillPopScope(
+      onWillPop: _willPopCallback,
+      child: Scaffold(
+        body: Stack(
+          children: [
+            HomeBackground(),
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 20),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    _customizedButton('With Card', _onPressedWithCard),
                     SizedBox(
                       height: 30,
                     ),
-                    FadeAnimation(
-                        2,
-                        Container(
-                          margin: EdgeInsets.only(top: 500, left: 50),
-                          height: 50,
-                          width: 300,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              gradient: LinearGradient(colors: [
-                                Color.fromRGBO(143, 148, 251, 1),
-                                Color.fromRGBO(143, 148, 251, .6),
-                              ])),
-                          child: Center(
-                            child: FlatButton(
-                              textColor: Colors.white,
-                              color: Colors.transparent,
-                              child: Text('With Card'),
-                              onPressed: _onPressedWithCard,
-                            ),
-                          ),
-                        )),
-                    SizedBox(
-                      height: 30,
-                    ),
-                    FadeAnimation(
-                      2,
-                      Container(
-                        margin: EdgeInsets.only(top: 610, left: 50),
-                        height: 50,
-                        width: 300,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            gradient: LinearGradient(colors: [
-                              Color.fromRGBO(143, 148, 251, 1),
-                              Color.fromRGBO(143, 148, 251, .6),
-                            ])),
-                        child: Center(
-                          child: FlatButton(
-                            textColor: Colors.white,
-                            color: Colors.transparent,
-                            child: Text('With Out Card'),
-                            onPressed: _onPressedWithoutCard,
-                          ),
-                        ),
-                      ),
-                    ),
+                    _customizedButton('With Out Card', _onPressedWithoutCard),
                   ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

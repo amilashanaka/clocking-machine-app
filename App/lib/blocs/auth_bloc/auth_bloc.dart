@@ -35,7 +35,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           error: "Incorrect username or password!",
         );
       }
-    } catch (_) {}
+    } catch (_) {
+      yield LoginPageAuthState(
+        error: "Something went wrong!",
+      );
+    }
   }
 
   Stream<AuthState> _mapLogoutAuthEvent() async* {
