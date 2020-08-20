@@ -1,5 +1,5 @@
 import 'package:ClockIN/blocs/staff_bloc/staff_bloc.dart';
-import 'package:ClockIN/data/staff.dart';
+import 'package:ClockIN/data/staff/staff.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -25,7 +25,6 @@ class StaffPage extends StatelessWidget {
                 Staff _staff = state.staffs[index];
 
                 return ListTile(
-                  // leading: Icon(Icons.account_circle),
                   leading: Text(_staff.id.toString()),
                   title: Text(
                     _staff.name,

@@ -7,7 +7,7 @@ import 'package:path/path.dart' show join;
 import 'package:flutter_nfc_reader/flutter_nfc_reader.dart';
 import 'package:meta/meta.dart';
 
-import 'package:ClockIN/data/staff.dart';
+import 'package:ClockIN/data/staff/staff.dart';
 import 'package:ClockIN/const.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';

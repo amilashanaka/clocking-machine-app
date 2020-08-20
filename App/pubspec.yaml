@@ -26,6 +26,7 @@ dependencies:
   path: 1.7.0
   path_provider: 1.6.11
   uuid: 2.2.0
+  sembast: 2.4.7+6
 
   flutter_nfc_reader:
     path: ../dependencies/flutter-nfc-reader/

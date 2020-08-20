@@ -1,4 +1,5 @@
 import 'package:ClockIN/blocs/staff_bloc/staff_bloc.dart';
+import 'package:ClockIN/model/Loading.dart';
 import 'package:ClockIN/screens/HomePage.dart';
 import 'package:ClockIN/blocs/auth_bloc/auth_bloc.dart';
 import 'package:ClockIN/screens/NFCScanPage.dart';
@@ -14,7 +15,7 @@ void main() {
       [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]).then(
     (_) => runApp(
       BlocProvider(
-        create: (context) => AuthBloc(),
+        create: (context) => AuthBloc()..add(CheckAuthEvent()),
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
           home: MyApp(),
@@ -40,7 +41,7 @@ class MyApp extends StatelessWidget {
           return LoginPage(errorText: state.error);
         }
 
-        return LoginPage();
+        return Loading();
       },
     );
   }

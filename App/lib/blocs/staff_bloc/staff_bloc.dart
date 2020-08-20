@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:ClockIN/const.dart';
-import 'package:ClockIN/data/staff.dart';
+import 'package:ClockIN/data/staff/staff.dart';
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:meta/meta.dart';

@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:ClockIN/Animation/FadeAnimation.dart';
-import 'package:ClockIN/data/staff.dart';
+import 'package:ClockIN/data/staff/staff.dart';
 
 class StaffAuthPage extends StatelessWidget {
   final bool manual;
