@@ -5,7 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:ClockIN/Animation/FadeAnimation.dart';
 import 'package:ClockIN/blocs/auth_bloc/auth_bloc.dart';
-import 'package:ClockIN/data/user/user.dart';
 
 class LoginPage extends StatefulWidget {
   final String errorText;
@@ -31,15 +30,12 @@ class _LoginPageState extends State<LoginPage> {
     });
 
     if (_checkUsername && _checkPassword) {
-      final user = User(
+      BlocProvider.of<AuthBloc>(context).add(LoginAuthEvent(
         username: _usernameController.text,
         password: _passwordController.text,
-      );
-      BlocProvider.of<AuthBloc>(context).add(LoginAuthEvent(user));
+      ));
     }
   }
-
-  void _onPressedForgotPassword() {}
 
   Widget _customizedTextFiled({
     @required String hintText,

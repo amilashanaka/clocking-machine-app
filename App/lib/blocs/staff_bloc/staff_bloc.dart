@@ -1,10 +1,11 @@
 import 'dart:async';
 
 import 'package:ClockIN/const.dart';
+import 'package:ClockIN/graphql/g_queries.dart';
 import 'package:ClockIN/data/staff/staff.dart';
 import 'package:bloc/bloc.dart';
-import 'package:dio/dio.dart';
 import 'package:meta/meta.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 
 part 'staff_event.dart';
 part 'staff_state.dart';
@@ -25,11 +26,17 @@ class StaffBloc extends Bloc<StaffEvent, StaffState> {
     try {
       yield StaffLoading();
 
-      Response response = await Dio().get(Const.loadStaffURL);
+      final httpLink = HttpLink(uri: Const.graphqlServerURL);
+      final link = Link.from([httpLink]);
+      final GraphQLClient _graphQLClient =
+          GraphQLClient(cache: InMemoryCache(), link: link);
 
-      if (response.data["success"]) {
+      final result = await _graphQLClient
+          .query(QueryOptions(documentNode: gql(GQueries.staffs)));
+
+      if (!result.hasException) {
         List<Staff> _staffs = [];
-        for (var i in response.data["data"]) {
+        for (var i in result.data["staffs"]) {
           _staffs.add(Staff.fromMap(i));
         }
         if (_staffs.length > 0) {

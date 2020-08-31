@@ -1,23 +1,31 @@
 class User {
+  int id;
   String username;
-  String password;
+  String email;
+  String name;
 
   User({
+    this.id,
     this.username,
-    this.password,
+    this.email,
+    this.name,
   });
 
   Map<String, dynamic> toMap() {
     return {
+      "id": id ?? 0,
       "username": username ?? "",
-      "password": password ?? "",
+      "email": email ?? "",
+      "name": name ?? "",
     };
   }
 
   static User fromMap(Map<String, dynamic> map) {
     return User(
-      username: map["username"],
-      password: map["password"],
+      id: int.parse(map["id"].toString()) ?? 0,
+      username: map["username"].toString() ?? "",
+      email: map["email"].toString() ?? 0,
+      name: map["name"].toString() ?? "",
     );
   }
 }

@@ -1,10 +1,9 @@
 import 'dart:async';
 
-import 'package:ClockIN/const.dart';
 import 'package:ClockIN/data/user/user.dart';
 import 'package:ClockIN/data/user/user_dao.dart';
+import 'package:ClockIN/graphql/g_actions.dart';
 import 'package:bloc/bloc.dart';
-import 'package:dio/dio.dart';
 import 'package:meta/meta.dart';
 
 part 'auth_event.dart';
@@ -15,6 +14,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   User _user;
   UserDao _userDao = UserDao();
+  GActions _actions = GActions();
 
   @override
   Stream<AuthState> mapEventToState(
@@ -36,10 +36,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       User user = await _userDao.getUser();
 
       if (user != null && user.username != null || user.username != "") {
-        final data = user.toMap();
-        Response response = await Dio().post(Const.loginUserURL, data: data);
+        final _checkUser = await _actions.checkUser(user);
 
-        if (response.data["success"]) {
+        if (_checkUser) {
           _user = user;
           yield HomePageAuthState(user);
         } else {
@@ -55,12 +54,16 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   Stream<AuthState> _mapLoginAuthEvent(LoginAuthEvent event) async* {
     try {
-      final data = event.user.toMap();
-      Response response = await Dio().post(Const.loginUserURL, data: data);
+      final _loginUser = await _actions.loginUser(
+        username: event.username,
+        password: event.password,
+      );
 
-      if (response.data["success"]) {
-        yield HomePageAuthState(event.user);
-        await _initUserData(event.user);
+      if (_loginUser != null) {
+        _user = _loginUser;
+
+        yield HomePageAuthState(_user);
+        await _initUserData(_user);
       } else {
         yield LoginPageAuthState(
           error: "Incorrect username or password!",

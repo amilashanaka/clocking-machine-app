@@ -6,9 +6,13 @@ abstract class AuthEvent {}
 class CheckAuthEvent extends AuthEvent {}
 
 class LoginAuthEvent extends AuthEvent {
-  final User user;
+  final String username;
+  final String password;
 
-  LoginAuthEvent(this.user);
+  LoginAuthEvent({
+    this.username,
+    this.password,
+  });
 }
 
 class LogoutAuthEvent extends AuthEvent {}

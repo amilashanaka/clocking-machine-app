@@ -1,14 +1,18 @@
+import 'package:ClockIN/data/staff/staff_in_out.dart';
+
 class Staff {
   int id;
   String name;
   String rfid;
   String pinCode;
+  StaffInOut staffInOut;
 
   Staff({
     this.id,
     this.name,
     this.rfid,
     this.pinCode,
+    this.staffInOut,
   });
 
   Map<String, dynamic> toMap() {
@@ -26,6 +30,9 @@ class Staff {
       name: map["name"].toString() ?? "",
       rfid: map["rfid"].toString() ?? "",
       pinCode: map["pinCode"].toString() ?? "",
+      staffInOut: map["lastInOut"] != null
+          ? StaffInOut.fromMap(map["lastInOut"]) ?? null
+          : null,
     );
   }
 }

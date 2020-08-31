@@ -1,14 +1,16 @@
 import 'dart:async';
+import 'dart:io';
 
+import 'package:ClockIN/graphql/g_actions.dart';
 import 'package:bloc/bloc.dart';
 import 'package:camera/camera.dart';
-import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
+import 'package:http/http.dart';
+import 'package:http_parser/http_parser.dart';
 import 'package:path/path.dart' show join;
 import 'package:flutter_nfc_reader/flutter_nfc_reader.dart';
 import 'package:meta/meta.dart';
-
 import 'package:ClockIN/data/staff/staff.dart';
-import 'package:ClockIN/const.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
 
@@ -21,6 +23,7 @@ class StaffAuthBloc extends Bloc<StaffAuthEvent, StaffAuthState> {
   Staff _staff;
   String _imagePath;
   CameraController _cameraController;
+  GActions _actions = GActions();
 
   @override
   Stream<StaffAuthState> mapEventToState(
@@ -56,15 +59,9 @@ class StaffAuthBloc extends Bloc<StaffAuthEvent, StaffAuthState> {
           return;
         }
 
-        final data = {
-          'rfid': nfcData.id,
-        };
+        _staff = await _actions.getStaffId(rfid: nfcData.id);
 
-        Response response =
-            await Dio().post(Const.getStaffByNfcURL, data: data);
-
-        if (response.data['success']) {
-          _staff = Staff.fromMap(response.data['data']);
+        if (_staff != null) {
           yield SelectActionState(_staff);
         } else {
           yield ErrorState("NFC tag is not identified!\n\nID: ${nfcData.id}");
@@ -83,15 +80,9 @@ class StaffAuthBloc extends Bloc<StaffAuthEvent, StaffAuthState> {
       yield LoadingState();
 
       _imagePath = "";
+      _staff = await _actions.getStaffId(pinCode: event.pinCode);
 
-      final data = {'pin_code': event.pinCode};
-
-      Response response = await Dio().post(
-        Const.getStaffByManualURL,
-        data: data,
-      );
-      if (response.data['success']) {
-        _staff = Staff.fromMap(response.data['data']);
+      if (_staff != null) {
         yield SelectActionState(_staff);
       } else {
         yield ErrorState(
@@ -108,26 +99,39 @@ class StaffAuthBloc extends Bloc<StaffAuthEvent, StaffAuthState> {
 
       final action = inAction ? "in" : "out";
       final fileAvailable = (_imagePath != null && _imagePath != "");
-      final imageFile =
-          fileAvailable ? await MultipartFile.fromFile(_imagePath) : null;
+      var _data;
 
-      final data = FormData.fromMap({
-        "file_available": fileAvailable,
-        "image_file": imageFile,
-        "image_file_name": Uuid().v4(),
-        "action": action,
-        "staff_id": _staff.id,
-        "time": DateTime.now().toString()
-      });
+      if (fileAvailable) {
+        var byteData = File(_imagePath).readAsBytesSync();
 
-      Response response = await Dio().post(Const.setStaffInOutURL, data: data);
-      if (response.data["success"]) {
+        var multipartFile = MultipartFile.fromBytes(
+          'photo',
+          byteData,
+          filename: '${DateTime.now().second}.png',
+          contentType: MediaType("image", "png"),
+        );
+
+        _data = {
+          "image_file": multipartFile,
+        };
+      } else {
+        _data = null;
+      }
+
+      final result = await _actions.setStaffInOut(
+        staffId: _staff.id,
+        action: action,
+        fileAvailable: fileAvailable,
+        imageFileName: Uuid().v4(),
+        data: _data,
+      );
+
+      if (result != null) {
         yield SuccessState("You have registered as ${action.toUpperCase()}");
       } else {
         yield ErrorState("Oops.. Something went wrong!");
       }
-    } catch (error) {
-      print(error);
+    } catch (_) {
       yield ErrorState("Oops.. Something went wrong!");
     }
   }
