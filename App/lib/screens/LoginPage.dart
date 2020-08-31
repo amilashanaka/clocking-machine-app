@@ -2,9 +2,9 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:ClockIN/Animation/FadeAnimation.dart';
 import 'package:ClockIN/blocs/auth_bloc/auth_bloc.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 
 class LoginPage extends StatefulWidget {
   final String errorText;
@@ -17,9 +17,11 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   bool _checkUsername = true;
   bool _checkPassword = true;
+  bool _checkDeviceName = true;
 
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _deviceNameController = TextEditingController();
 
   void _onPressedLogin(BuildContext context) {
     setState(() {
@@ -27,12 +29,15 @@ class _LoginPageState extends State<LoginPage> {
           (_usernameController.text != null && _usernameController.text != "");
       _checkPassword =
           (_passwordController.text != null && _passwordController.text != "");
+      _checkDeviceName = (_deviceNameController.text != null &&
+          _deviceNameController.text != "");
     });
 
     if (_checkUsername && _checkPassword) {
       BlocProvider.of<AuthBloc>(context).add(LoginAuthEvent(
         username: _usernameController.text,
         password: _passwordController.text,
+        deviceName: _deviceNameController.text,
       ));
     }
   }
@@ -46,7 +51,7 @@ class _LoginPageState extends State<LoginPage> {
   }) {
     double _borderRadius = 5.0;
     double _textPadding = 20.0;
-    double _iconSize = 15.0;
+    double _iconSize = 20.0;
     double _iconBoxSize = 60.0;
     Color _iconColor = Color(0xFF5F6269);
     Color _iconErrorColor = Colors.redAccent;
@@ -153,17 +158,25 @@ class _LoginPageState extends State<LoginPage> {
                         children: <Widget>[
                           _customizedTextFiled(
                             hintText: "User Name",
-                            prefixIcon: FontAwesomeIcons.userAlt,
+                            prefixIcon: FontAwesome.user,
                             textEditingController: _usernameController,
                             state: _checkUsername,
                           ),
                           SizedBox(height: 15),
                           _customizedTextFiled(
                             hintText: "Password",
-                            prefixIcon: FontAwesomeIcons.key,
+                            prefixIcon: FontAwesome.lock,
                             textEditingController: _passwordController,
                             state: _checkPassword,
                             password: true,
+                          ),
+                          SizedBox(height: 15),
+                          _customizedTextFiled(
+                            hintText: "Device Name",
+                            prefixIcon: AntDesign.mobile1,
+                            textEditingController: _deviceNameController,
+                            state: _checkDeviceName,
+                            password: false,
                           ),
                         ],
                       ),
@@ -176,7 +189,7 @@ class _LoginPageState extends State<LoginPage> {
                             Column(
                               children: [
                                 Text(
-                                  "Incorrect username or password!",
+                                  widget.errorText,
                                   style: TextStyle(
                                     color: Colors.red,
                                     fontSize: 18,

@@ -26,17 +26,17 @@ class StaffBloc extends Bloc<StaffEvent, StaffState> {
     try {
       yield StaffLoading();
 
-      final httpLink = HttpLink(uri: Const.graphqlServerURL);
+      final httpLink = HttpLink(uri: Const.graphqlURL);
       final link = Link.from([httpLink]);
       final GraphQLClient _graphQLClient =
           GraphQLClient(cache: InMemoryCache(), link: link);
 
       final result = await _graphQLClient
-          .query(QueryOptions(documentNode: gql(GQueries.staffs)));
+          .query(QueryOptions(documentNode: gql(GQueries.getEmployees)));
 
       if (!result.hasException) {
         List<Staff> _staffs = [];
-        for (var i in result.data["staffs"]) {
+        for (var i in result.data['employees']['data']) {
           _staffs.add(Staff.fromMap(i));
         }
         if (_staffs.length > 0) {

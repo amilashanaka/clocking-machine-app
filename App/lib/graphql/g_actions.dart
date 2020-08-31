@@ -9,7 +9,7 @@ class GActions {
   GraphQLClient _graphQLClient;
 
   GActions() {
-    final httpLink = HttpLink(uri: Const.graphqlServerURL);
+    final httpLink = HttpLink(uri: Const.graphqlURL);
     final _link = Link.from([httpLink]);
     _graphQLClient = GraphQLClient(cache: InMemoryCache(), link: _link);
   }
@@ -121,27 +121,27 @@ class GActions {
 
   Future<bool> checkUser(User user) async {
     try {
-      final result = await _graphQLClient.query(QueryOptions(
-        documentNode: gql(
-          GQueries.checkUser(
-            id: user.id,
-            username: user.username,
-            email: user.email,
-          ),
-        ),
-      ));
+      // final result = await _graphQLClient.query(QueryOptions(
+      //   documentNode: gql(
+      //     GQueries.checkUser(
+      //       id: user.id,
+      //       username: user.username,
+      //       email: user.email,
+      //     ),
+      //   ),
+      // ));
 
-      if (!result.hasException) {
-        final data = result.data['user'];
+      // if (!result.hasException) {
+      //   final data = result.data['user'];
 
-        if (data != null && user.name == data['name']) {
-          return true;
-        } else {
-          return false;
-        }
-      } else {
-        return false;
-      }
+      //   if (data != null && user.name == data['name']) {
+      //     return true;
+      //   } else {
+      //     return false;
+      //   }
+      // } else {
+      //   return false;
+      // }
     } catch (_) {
       return false;
     }

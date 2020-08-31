@@ -55,24 +55,6 @@ class GQueries {
     """;
   }
 
-  static String checkUser({
-    int id,
-    String username,
-    String email,
-  }) {
-    return """
-      query {
-        user(
-          id: $id,
-          username: "$username",
-          email: "$email"
-        ) {
-          name
-        }
-      }
-    """;
-  }
-
   static String setStaffInOut({
     String action,
     String time,
@@ -125,6 +107,27 @@ class GQueries {
     }
   """;
   }
+
+  static String login() {
+    return """
+    """;
+  }
+
+  static String getEmployees = """
+    query Employees {
+      employees(first: 100) {
+        paginatorInfo {
+          total
+          currentPage
+          lastPage
+        }
+        data {
+          id
+          name
+        }
+      }
+    }
+  """;
 
   static String staffs = """
     query {
