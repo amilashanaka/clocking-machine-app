@@ -124,6 +124,8 @@ class GQueries {
         data {
           id
           name
+          rfid
+          pin
         }
       }
     }

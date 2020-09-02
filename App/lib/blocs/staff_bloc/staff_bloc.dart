@@ -34,6 +34,8 @@ class StaffBloc extends Bloc<StaffEvent, StaffState> {
       final result = await _graphQLClient
           .query(QueryOptions(documentNode: gql(GQueries.getEmployees)));
 
+      print(result.toString());
+
       if (!result.hasException) {
         List<Staff> _staffs = [];
         for (var i in result.data['employees']['data']) {
