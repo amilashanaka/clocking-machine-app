@@ -64,8 +64,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         "role": "clocking-machine",
       };
 
-      print(_data);
-
       final _headers = {
         "Accept": "application/json",
       };
@@ -77,8 +75,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       );
 
       if (response.statusCode == 200) {
-
-        print( json.decode(response.body));
         var _resData = json.decode(response.body);
 
         _user = User(
