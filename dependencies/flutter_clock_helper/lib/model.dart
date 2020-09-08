@@ -14,7 +14,7 @@ import 'package:flutter/material.dart';
 /// Contestants: Do not edit this.
 class ClockModel extends ChangeNotifier {
   get is24HourFormat => _is24HourFormat;
-  bool _is24HourFormat = true;
+  bool _is24HourFormat = false;
   set is24HourFormat(bool is24HourFormat) {
     if (_is24HourFormat != is24HourFormat) {
       _is24HourFormat = is24HourFormat;

@@ -30,7 +30,7 @@ class StaffPage extends StatelessWidget {
                     _staff.name,
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  subtitle: Text("RFID: ${_staff.rfid}"),
+                  subtitle: Text("NFC: ${_staff.nfc}"),
                 );
               },
             );

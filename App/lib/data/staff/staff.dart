@@ -3,15 +3,15 @@ import 'package:ClockIN/data/staff/staff_in_out.dart';
 class Staff {
   int id;
   String name;
-  String rfid;
-  String pinCode;
+  String nfc;
+  String pin;
   StaffInOut staffInOut;
 
   Staff({
     this.id,
     this.name,
-    this.rfid,
-    this.pinCode,
+    this.nfc,
+    this.pin,
     this.staffInOut,
   });
 
@@ -19,8 +19,8 @@ class Staff {
     return {
       "id": id ?? 0,
       "name": name ?? "",
-      "rfid": rfid ?? "",
-      "pinCode": pinCode ?? ""
+      "nfc": nfc ?? "",
+      "pin": pin ?? ""
     };
   }
 
@@ -28,8 +28,8 @@ class Staff {
     return Staff(
       id: int.parse(map["id"].toString()) ?? 0,
       name: map["name"].toString() ?? "",
-      rfid: map["rfid"].toString() ?? "",
-      pinCode: map["pinCode"].toString() ?? "",
+      nfc: map["nfc"].toString() ?? "",
+      pin: map["pin"].toString() ?? "",
       staffInOut: map["lastInOut"] != null
           ? StaffInOut.fromMap(map["lastInOut"]) ?? null
           : null,

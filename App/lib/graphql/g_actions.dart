@@ -1,4 +1,4 @@
-import 'package:ClockIN/const.dart';
+// import 'package:ClockIN/const.dart';
 import 'package:ClockIN/data/staff/staff.dart';
 import 'package:ClockIN/data/staff/staff_in_out.dart';
 import 'package:ClockIN/data/user/user.dart';
@@ -9,21 +9,21 @@ class GActions {
   GraphQLClient _graphQLClient;
 
   GActions() {
-    final httpLink = HttpLink(uri: Const.graphqlURL);
-    final _link = Link.from([httpLink]);
-    _graphQLClient = GraphQLClient(cache: InMemoryCache(), link: _link);
+    // final httpLink = HttpLink(uri: Const.graphqlURL);
+    // final _link = Link.from([httpLink]);
+    // _graphQLClient = GraphQLClient(cache: InMemoryCache(), link: _link);
   }
 
   Future<Staff> getStaffId({
-    String rfid,
+    String nfc,
     String pinCode,
   }) async {
     try {
       String _query;
       String _propertyName;
 
-      if (rfid != null) {
-        _query = GQueries.staffByRfid(rfid);
+      if (nfc != null) {
+        _query = GQueries.staffByRfid(nfc);
         _propertyName = "staffByRfid";
       } else {
         _query = GQueries.staffByPinCode(pinCode);
@@ -119,31 +119,31 @@ class GActions {
     }
   }
 
-  Future<bool> checkUser(User user) async {
-    try {
-      // final result = await _graphQLClient.query(QueryOptions(
-      //   documentNode: gql(
-      //     GQueries.checkUser(
-      //       id: user.id,
-      //       username: user.username,
-      //       email: user.email,
-      //     ),
-      //   ),
-      // ));
+  // Future<bool> checkUser(User user) async {
+  //   try {
+  //     final result = await _graphQLClient.query(QueryOptions(
+  //       documentNode: gql(
+  //         GQueries.checkUser(
+  //           id: user.id,
+  //           username: user.username,
+  //           email: user.email,
+  //         ),
+  //       ),
+  //     ));
 
-      // if (!result.hasException) {
-      //   final data = result.data['user'];
+  //     if (!result.hasException) {
+  //       final data = result.data['user'];
 
-      //   if (data != null && user.name == data['name']) {
-      //     return true;
-      //   } else {
-      //     return false;
-      //   }
-      // } else {
-      //   return false;
-      // }
-    } catch (_) {
-      return false;
-    }
-  }
+  //       if (data != null && user.name == data['name']) {
+  //         return true;
+  //       } else {
+  //         return false;
+  //       }
+  //     } else {
+  //       return false;
+  //     }
+  //   } catch (_) {
+  //     return false;
+  //   }
+  // }
 }

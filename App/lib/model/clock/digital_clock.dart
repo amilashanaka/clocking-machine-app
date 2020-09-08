@@ -1,8 +1,8 @@
 import 'package:ClockIN/model/clock/clock.dart';
 import 'package:ClockIN/model/clock/layers/digits.dart';
-import 'package:ClockIN/model/clock/layers/mountains.dart';
-import 'package:ClockIN/model/clock/layers/sky.dart';
-import 'package:ClockIN/model/clock/layers/sky_gradient.dart';
+// import 'package:ClockIN/model/clock/layers/mountains.dart';
+// import 'package:ClockIN/model/clock/layers/sky.dart';
+// import 'package:ClockIN/model/clock/layers/sky_gradient.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -18,15 +18,15 @@ class DigitalClock extends StatelessWidget {
 
     return Stack(
       children: [
-        Transform.scale(scale: 1.5, child: SkyGradient()),
-        Transform.scale(scale: 1.3, child: Sky()),
-        Transform.scale(
-          scale: 1.25,
-          child: Transform.translate(
-            offset: Offset(0, h * 0.06),
-            child: Mountains(),
-          ),
-        ),
+        // Transform.scale(scale: 1.5, child: SkyGradient()),
+        // Transform.scale(scale: 1.3, child: Sky()),
+        // Transform.scale(
+        //   scale: 1.25,
+        //   child: Transform.translate(
+        //     offset: Offset(0, h * 0.06),
+        //     child: Mountains(),
+        //   ),
+        // ),
         _TimeSection(h: h, w: w),
       ],
     );
@@ -45,7 +45,7 @@ class _TimeSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDayTime = Clock.of(context).isDayTime;
+    // final isDayTime = Clock.of(context).isDayTime;
     final textColor = Colors.white;
     final bottomTextStyle = TextStyle(
       color: textColor,
@@ -55,7 +55,8 @@ class _TimeSection extends StatelessWidget {
 
     return ColorFiltered(
       colorFilter: ColorFilter.mode(
-        isDayTime ? Colors.black : Colors.white,
+        // isDayTime ? Colors.black :
+        Colors.white,
         BlendMode.modulate,
       ),
       child: Container(

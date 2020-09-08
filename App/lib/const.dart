@@ -1,6 +1,5 @@
 class Const {
-  static String serverURL = "https://kun.aiku.io";
+  static String serverURL = 'https://box.inikoo.com/box_api.php';
 
-  static String authURL = "$serverURL/api/token";
-  static String graphqlURL = "$serverURL/graphql";
+  static String apiKey = "jwUFBkWWbuilHBTEHxqWuScj80WIpVMH";
 }

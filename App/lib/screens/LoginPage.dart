@@ -15,28 +15,33 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  bool _checkUsername = true;
-  bool _checkPassword = true;
+  // bool _checkServerAddress = true;
+  // bool _checkUsername = true;
+  // bool _checkPassword = true;
   bool _checkDeviceName = true;
 
-  final TextEditingController _usernameController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+  // final TextEditingController _serverAddressController =
+  //     TextEditingController();
+  // final TextEditingController _usernameController = TextEditingController();
+  // final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _deviceNameController = TextEditingController();
 
   void _onPressedLogin(BuildContext context) {
     setState(() {
-      _checkUsername =
-          (_usernameController.text != null && _usernameController.text != "");
-      _checkPassword =
-          (_passwordController.text != null && _passwordController.text != "");
+      // _checkServerAddress = (_serverAddressController.text != null &&
+      //     _serverAddressController.text != "");
+      // _checkUsername =
+      //     (_usernameController.text != null && _usernameController.text != "");
+      // _checkPassword =
+      //     (_passwordController.text != null && _passwordController.text != "");
       _checkDeviceName = (_deviceNameController.text != null &&
           _deviceNameController.text != "");
     });
 
-    if (_checkUsername && _checkPassword) {
+    if (_checkDeviceName) {
       BlocProvider.of<AuthBloc>(context).add(LoginAuthEvent(
-        username: _usernameController.text,
-        password: _passwordController.text,
+        // username: _usernameController.text,
+        // password: _passwordController.text,
         deviceName: _deviceNameController.text,
       ));
     }
@@ -80,12 +85,13 @@ class _LoginPageState extends State<LoginPage> {
               height: _iconBoxSize,
               child: Container(
                 decoration: BoxDecoration(
-                    color: _iconBackgroundColor,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(_borderRadius),
-                      bottomLeft: Radius.circular(_borderRadius),
-                    ),
-                    border: Border.all(color: _iconBackgroundColor)),
+                  color: _iconBackgroundColor,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(_borderRadius),
+                    bottomLeft: Radius.circular(_borderRadius),
+                  ),
+                  border: Border.all(color: _iconBackgroundColor),
+                ),
                 child: Icon(
                   prefixIcon,
                   color: state ? _iconColor : _iconErrorColor,
@@ -100,9 +106,13 @@ class _LoginPageState extends State<LoginPage> {
           errorBorder: InputBorder.none,
           disabledBorder: InputBorder.none,
           hintText: hintText,
+          hintStyle: TextStyle(color: Colors.black.withOpacity(0.6)),
         ),
         obscureText: password,
-        style: TextStyle(fontSize: _fontSize),
+        style: TextStyle(
+          fontSize: _fontSize,
+          color: Colors.black,
+        ),
       ),
     );
   }
@@ -115,10 +125,11 @@ class _LoginPageState extends State<LoginPage> {
         children: [
           Container(
             decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage("assets/images/login_background.jpg"),
-                fit: BoxFit.cover,
-              ),
+              // image: DecorationImage(
+              //   image: AssetImage("assets/images/login_background.jpg"),
+              //   fit: BoxFit.cover,
+              // ),
+              color: Colors.black,
             ),
           ),
           Center(
@@ -156,21 +167,28 @@ class _LoginPageState extends State<LoginPage> {
                       Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                          _customizedTextFiled(
-                            hintText: "User Name",
-                            prefixIcon: FontAwesome.user,
-                            textEditingController: _usernameController,
-                            state: _checkUsername,
-                          ),
-                          SizedBox(height: 15),
-                          _customizedTextFiled(
-                            hintText: "Password",
-                            prefixIcon: FontAwesome.lock,
-                            textEditingController: _passwordController,
-                            state: _checkPassword,
-                            password: true,
-                          ),
-                          SizedBox(height: 15),
+                          // _customizedTextFiled(
+                          //   hintText: "Server Address",
+                          //   prefixIcon: FontAwesome5Solid.desktop,
+                          //   textEditingController: _serverAddressController,
+                          //   state: _checkServerAddress,
+                          // ),
+                          // SizedBox(height: 15),
+                          // _customizedTextFiled(
+                          //   hintText: "User Name",
+                          //   prefixIcon: FontAwesome.user,
+                          //   textEditingController: _usernameController,
+                          //   state: _checkUsername,
+                          // ),
+                          // SizedBox(height: 15),
+                          // _customizedTextFiled(
+                          //   hintText: "Password",
+                          //   prefixIcon: FontAwesome.lock,
+                          //   textEditingController: _passwordController,
+                          //   state: _checkPassword,
+                          //   password: true,
+                          // ),
+                          // SizedBox(height: 15),
                           _customizedTextFiled(
                             hintText: "Device Name",
                             prefixIcon: AntDesign.mobile1,
@@ -213,7 +231,8 @@ class _LoginPageState extends State<LoginPage> {
                         splashColor: Colors.black.withOpacity(0.8),
                         child: Ink(
                           decoration: BoxDecoration(
-                            color: Color(0xFF171717),
+                            color: Color(0xFFDC7300),
+                            // color: Color(0xFF171717),
                             border: Border.all(color: Color(0xFF171717)),
                             borderRadius:
                                 BorderRadius.all(Radius.circular(10.0)),
@@ -228,6 +247,8 @@ class _LoginPageState extends State<LoginPage> {
                               'LOG IN',
                               textAlign: TextAlign.center,
                               style: TextStyle(
+                                // color: Colors.black,
+                                fontWeight: FontWeight.bold,
                                 color: Colors.white,
                                 fontSize: 18,
                               ),

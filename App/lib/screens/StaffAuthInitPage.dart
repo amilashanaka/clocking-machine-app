@@ -1,54 +1,58 @@
-import 'package:ClockIN/blocs/staff_auth_bloc/staff_auth_bloc.dart';
+import 'package:ClockIN/Animation/FadeAnimation.dart';
+import 'package:ClockIN/blocs/staff_auth_init_bloc/staff_auth_init_bloc.dart';
+import 'package:ClockIN/data/staff/staff.dart';
 import 'package:ClockIN/model/StaffAuthModel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ClockIN/Animation/FadeAnimation.dart';
 
-class StaffAuthPage extends StatelessWidget {
-  final bool manual;
+class StaffAuthInitPage extends StatelessWidget {
+  final bool nfc;
+  final Staff staff;
   final String deviceName;
 
-  StaffAuthPage({
-    this.manual = false,
+  StaffAuthInitPage({
+    this.nfc = true,
+    @required this.staff,
     @required this.deviceName,
   });
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => StaffAuthBloc()
-        ..add(manual
-            ? ManualAuthEvent(deviceName: deviceName)
-            : ReadNfcEvent(deviceName: deviceName)),
-      child: _StaffAuthPageWidget(),
+      create: (context) => StaffAuthInitBloc()
+        ..add(nfc
+            ? InitialNfcEvent(staff: staff, deviceName: deviceName)
+            : InitialPinCodeEvent(staff: staff, deviceName: deviceName)),
+      child: _StaffAuthInitPageWidget(),
     );
   }
 }
 
-class _StaffAuthPageWidget extends StatefulWidget {
+class _StaffAuthInitPageWidget extends StatefulWidget {
   @override
-  __StaffAuthPageWidgetState createState() => __StaffAuthPageWidgetState();
+  __StaffAuthInitPageWidgetState createState() =>
+      __StaffAuthInitPageWidgetState();
 }
 
-class __StaffAuthPageWidgetState extends State<_StaffAuthPageWidget>
+class __StaffAuthInitPageWidgetState extends State<_StaffAuthInitPageWidget>
     with StaffAuthModel {
-  StaffAuthBloc _staffAuthBloc;
+  StaffAuthInitBloc _staffAuthInitBloc;
 
   @override
   void initState() {
     authContext = context;
-    _staffAuthBloc = BlocProvider.of<StaffAuthBloc>(context);
+    _staffAuthInitBloc = BlocProvider.of<StaffAuthInitBloc>(context);
     super.initState();
   }
 
-  void _onPressedInAction() => _staffAuthBloc.add(InActionEvent());
-
-  void _onPressedOutAction() => _staffAuthBloc.add(OutActionEvent());
-
   void _onPressedSendPinCode() {
     if (pincodeFromKey.currentState.validate()) {
-      _staffAuthBloc.add(SetManualAuthEvent(txtPinCode.text));
+      _staffAuthInitBloc.add(SetPinCodeEvent(txtPinCode.text));
     }
+  }
+
+  void _onPressedConfirmData() {
+    _staffAuthInitBloc.add(ConfirmDataEvent());
   }
 
   Future<bool> _willPopCallback() async {
@@ -77,18 +81,19 @@ class __StaffAuthPageWidgetState extends State<_StaffAuthPageWidget>
                     height: 350,
                     width: double.infinity,
                     child: Center(
-                      child: BlocBuilder<StaffAuthBloc, StaffAuthState>(
+                      child: BlocBuilder<StaffAuthInitBloc, StaffAuthInitState>(
                         builder: (context, state) {
                           if (state is ScanningNfcState) {
                             return scanningNfcWidget();
-                          } else if (state is ShowManualAuthState) {
+                          } else if (state is ShowPinCodeEntryState) {
                             return showPinCodeEntryWidget(
                                 _onPressedSendPinCode);
-                          } else if (state is SelectActionState) {
-                            return showSelectActionWidget(
+                          } else if (state is PreviewDataState) {
+                            return previewDataWidget(
+                              nfc: state.nfc,
+                              data: state.data,
                               staff: state.staff,
-                              onPressedInAction: _onPressedInAction,
-                              onPressedOutAction: _onPressedOutAction,
+                              onPressedConfirmData: _onPressedConfirmData,
                             );
                           } else if (state is SuccessState) {
                             return showMessageWidget(false, state.message);

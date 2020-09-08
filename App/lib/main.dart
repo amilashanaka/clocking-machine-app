@@ -1,8 +1,6 @@
-import 'package:ClockIN/blocs/staff_bloc/staff_bloc.dart';
 import 'package:ClockIN/model/Loading.dart';
 import 'package:ClockIN/screens/HomePage.dart';
 import 'package:ClockIN/blocs/auth_bloc/auth_bloc.dart';
-import 'package:ClockIN/screens/StaffPage.dart';
 import 'package:flutter/material.dart';
 import 'package:ClockIN/screens/LoginPage.dart';
 import 'package:flutter/services.dart';
@@ -17,6 +15,7 @@ void main() {
         create: (context) => AuthBloc()..add(CheckAuthEvent()),
         child: MaterialApp(
           title: "ClockIN",
+          theme: ThemeData.dark(),
           debugShowCheckedModeBanner: false,
           home: MyApp(),
         ),
@@ -31,12 +30,7 @@ class MyApp extends StatelessWidget {
     return BlocBuilder<AuthBloc, AuthState>(
       builder: (context, state) {
         if (state is HomePageAuthState) {
-          // return HomePage();
-
-          return BlocProvider(
-            create: (context) => StaffBloc()..add(LoadStaffEvent()),
-            child: StaffPage(),
-          );
+          return HomePage(user: state.user);
         } else if (state is LoginPageAuthState) {
           return LoginPage(errorText: state.error);
         }
