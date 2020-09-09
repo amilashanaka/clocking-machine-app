@@ -3,25 +3,9 @@ part of 'staff_auth_init_bloc.dart';
 @immutable
 abstract class StaffAuthInitEvent {}
 
-class InitialNfcEvent extends StaffAuthInitEvent {
-  final Staff staff;
-  final String deviceName;
+class InitialNfcEvent extends StaffAuthInitEvent {}
 
-  InitialNfcEvent({
-    this.staff,
-    this.deviceName,
-  });
-}
-
-class InitialPinCodeEvent extends StaffAuthInitEvent {
-  final Staff staff;
-  final String deviceName;
-
-  InitialPinCodeEvent({
-    this.staff,
-    this.deviceName,
-  });
-}
+class InitialPinCodeEvent extends StaffAuthInitEvent {}
 
 class SetPinCodeEvent extends StaffAuthInitEvent {
   final String pinCode;

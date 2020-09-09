@@ -22,7 +22,7 @@ mixin StaffAuthModel {
     return null;
   }
 
-  String _validateSettingPin(String value){
+  String _validateSettingPin(String value) {
     if (value == null || value.trim() == "" || value.length != 6) {
       return "PIN must be 6 digits";
     }
@@ -559,6 +559,77 @@ mixin StaffAuthModel {
               title: "Cancel",
               onPressed: onPressedCancel,
               cancel: true,
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget showDuplicatedDataWidget({
+    bool nfc,
+    String data,
+    Function retryOnPressed,
+  }) {
+    String _message = nfc ? "NFC: " : "Pin Code: ";
+    _message += "$data\n\n";
+    _message += nfc ? "NFC " : "Pin Code ";
+    _message += "is already exists.";
+
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(
+          Icons.error,
+          color: Colors.redAccent,
+          size: 50,
+        ),
+        SizedBox(height: 10),
+        Text(
+          _message,
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
+          textAlign: TextAlign.center,
+        ),
+        SizedBox(height: 40),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            RaisedButton(
+              child: Text(
+                "Retry",
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.black,
+                ),
+              ),
+              onPressed: () => retryOnPressed(nfc),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+                side: BorderSide(color: Colors.blueAccent, width: 1.5),
+              ),
+              color: Colors.white,
+              splashColor: Colors.blueAccent,
+            ),
+            SizedBox(width: 20),
+            RaisedButton(
+              child: Text(
+                "Go back",
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.black,
+                ),
+              ),
+              onPressed: onPressedCancel,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+                side: BorderSide(color: Colors.grey, width: 1.5),
+              ),
+              color: Colors.white,
+              splashColor: Colors.grey,
             ),
           ],
         ),

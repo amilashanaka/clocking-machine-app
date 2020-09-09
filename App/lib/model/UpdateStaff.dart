@@ -10,8 +10,6 @@ class UpdateStaff extends StatelessWidget {
   UpdateStaff({@required this.nfc, @required this.deviceName});
 
   void _onPressedStaffRow(Staff staff, BuildContext context) {
-    print(staff.id);
-    print(staff.name);
     Navigator.push(
       context,
       PageRouteBuilder(

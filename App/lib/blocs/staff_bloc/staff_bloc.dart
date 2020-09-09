@@ -14,24 +14,26 @@ part 'staff_event.dart';
 part 'staff_state.dart';
 
 class StaffBloc extends Bloc<StaffEvent, StaffState> {
-  StaffBloc() : super(StaffLoading());
+  StaffBloc({@required this.deviceName}) : super(StaffLoading());
+
+  String deviceName;
 
   @override
   Stream<StaffState> mapEventToState(
     StaffEvent event,
   ) async* {
     if (event is LoadStaffEvent) {
-      yield* _mapLoadStaffEvent(event);
+      yield* _mapLoadStaffEvent();
     }
   }
 
-  Stream<StaffState> _mapLoadStaffEvent(LoadStaffEvent event) async* {
+  Stream<StaffState> _mapLoadStaffEvent() async* {
     try {
       yield StaffLoading();
 
       final _data = {"get": "staff"};
 
-      final _headers = {"x-api-key": "${event.deviceName}${Const.apiKey}"};
+      final _headers = {"x-api-key": "$deviceName${Const.apiKey}"};
 
       Response _response = await Dio().post(
         Const.serverURL,

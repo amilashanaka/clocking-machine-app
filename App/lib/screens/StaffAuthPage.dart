@@ -16,10 +16,8 @@ class StaffAuthPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => StaffAuthBloc()
-        ..add(manual
-            ? ManualAuthEvent(deviceName: deviceName)
-            : ReadNfcEvent(deviceName: deviceName)),
+      create: (context) => StaffAuthBloc(deviceName: deviceName)
+        ..add(manual ? ManualAuthEvent() : ReadNfcEvent()),
       child: _StaffAuthPageWidget(),
     );
   }

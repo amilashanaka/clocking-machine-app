@@ -21,6 +21,16 @@ class PreviewDataState extends StaffAuthInitState {
   });
 }
 
+class DuplicateDataState extends StaffAuthInitState {
+  final String data;
+  final bool nfc;
+
+  DuplicateDataState({
+    this.data,
+    this.nfc,
+  });
+}
+
 class ErrorState extends StaffAuthInitState {
   final String message;
 

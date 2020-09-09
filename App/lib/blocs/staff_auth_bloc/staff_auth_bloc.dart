@@ -23,14 +23,16 @@ part 'staff_auth_event.dart';
 part 'staff_auth_state.dart';
 
 class StaffAuthBloc extends Bloc<StaffAuthEvent, StaffAuthState> {
-  StaffAuthBloc() : super(LoadingState());
+  StaffAuthBloc({
+    @required this.deviceName,
+  }) : super(LoadingState());
 
   Staff _staff;
   // String _imagePath;
   // CameraController _cameraController;
   // GActions _actions = GActions();
   bool _nfc;
-  String _deviceName;
+  String deviceName;
 
   @override
   Stream<StaffAuthState> mapEventToState(
@@ -53,8 +55,7 @@ class StaffAuthBloc extends Bloc<StaffAuthEvent, StaffAuthState> {
     try {
       yield LoadingState();
 
-      _deviceName = event.deviceName;
-      final _check = await DeviceChecker.test(deviceName: event.deviceName);
+      final _check = await DeviceChecker.test(deviceName: deviceName);
 
       if (!_check.error) {
         yield ScanningNfcState();
@@ -97,8 +98,7 @@ class StaffAuthBloc extends Bloc<StaffAuthEvent, StaffAuthState> {
     try {
       yield LoadingState();
 
-      _deviceName = event.deviceName;
-      final _check = await DeviceChecker.test(deviceName: event.deviceName);
+      final _check = await DeviceChecker.test(deviceName: deviceName);
 
       if (!_check.error) {
         yield ShowManualAuthState();
@@ -141,7 +141,7 @@ class StaffAuthBloc extends Bloc<StaffAuthEvent, StaffAuthState> {
         "staff_id": _staff.id,
         "clocking": DateTime.now().toString().split(".")[0],
       };
-      final _headers = {"x-api-key": "$_deviceName${Const.apiKey}"};
+      final _headers = {"x-api-key": "$deviceName${Const.apiKey}"};
 
       Response response = await Dio().post(
         Const.serverURL,
@@ -215,7 +215,7 @@ class StaffAuthBloc extends Bloc<StaffAuthEvent, StaffAuthState> {
   Future<Staff> _checkStaff({String nfc, String pinCode}) async {
     try {
       final _data = {"get": "staff"};
-      final _headers = {"x-api-key": "$_deviceName${Const.apiKey}"};
+      final _headers = {"x-api-key": "$deviceName${Const.apiKey}"};
 
       Response _response = await Dio().post(
         Const.serverURL,

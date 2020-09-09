@@ -49,7 +49,7 @@ class SettingsPage extends StatelessWidget {
         children: [
           BlocProvider(
             create: (context) =>
-                StaffBloc()..add(LoadStaffEvent(deviceName: deviceName)),
+                StaffBloc(deviceName: deviceName)..add(LoadStaffEvent()),
             child: Expanded(
               child: VerticalTabs(
                 indicatorColor: Colors.blue,

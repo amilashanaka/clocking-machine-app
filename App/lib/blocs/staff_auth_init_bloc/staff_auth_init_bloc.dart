@@ -3,22 +3,26 @@ import 'dart:convert';
 
 import 'package:ClockIN/const.dart';
 import 'package:ClockIN/data/staff/staff.dart';
+import 'package:ClockIN/util/system_message.dart';
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_nfc_reader/flutter_nfc_reader.dart';
-// import 'package:http/http.dart' as http;
 import 'package:meta/meta.dart';
 
 part 'staff_auth_init_event.dart';
 part 'staff_auth_init_state.dart';
 
 class StaffAuthInitBloc extends Bloc<StaffAuthInitEvent, StaffAuthInitState> {
-  StaffAuthInitBloc() : super(LoadingState());
+  StaffAuthInitBloc({
+    @required this.staff,
+    @required this.deviceName,
+    @required this.nfc,
+  }) : super(LoadingState());
 
-  bool _nfc;
-  Staff _staff;
   String _data;
-  String _deviceName;
+  bool nfc;
+  Staff staff;
+  String deviceName;
 
   @override
   Stream<StaffAuthInitState> mapEventToState(
@@ -37,13 +41,10 @@ class StaffAuthInitBloc extends Bloc<StaffAuthInitEvent, StaffAuthInitState> {
 
   Stream<StaffAuthInitState> _mapInitialNfcEvent(InitialNfcEvent event) async* {
     try {
-      _deviceName = event.deviceName;
-      if (event.staff != null) {
-        _staff = event.staff;
-        _nfc = true;
-      } else {
-        _nfc = false;
-        yield ErrorState("Oops.. Something went wrong!");
+      yield LoadingState();
+
+      if (staff == null) {
+        yield ErrorState(SystemMessage.errSystemError);
         return;
       }
 
@@ -52,66 +53,80 @@ class StaffAuthInitBloc extends Bloc<StaffAuthInitEvent, StaffAuthInitState> {
       final nfcData = await FlutterNfcReader.read();
 
       if (nfcData != null) {
-        _data = nfcData.id;
-        yield PreviewDataState(
-          nfc: true,
-          data: nfcData.id,
-          staff: _staff,
-        );
+        bool _check = await _checkDataDuplication(nfcData.id);
+        if (!_check) {
+          _data = nfcData.id;
+          yield PreviewDataState(
+            nfc: true,
+            data: nfcData.id,
+            staff: staff,
+          );
+        } else {
+          yield DuplicateDataState(nfc: nfc, data: nfcData.id);
+        }
       } else {
         yield ErrorState("No NFC tags identified!");
       }
     } catch (_) {
-      yield ErrorState("Oops.. Something went wrong!");
+      yield ErrorState(SystemMessage.errSystemError);
     }
   }
 
   Stream<StaffAuthInitState> _mapInitialPinCodeEvent(
       InitialPinCodeEvent event) async* {
     try {
-      _deviceName = event.deviceName;
-      if (event.staff != null) {
-        _staff = event.staff;
+      yield LoadingState();
+
+      if (staff != null) {
         yield ShowPinCodeEntryState();
       } else {
-        yield ErrorState("Oops.. Something went wrong!");
+        yield ErrorState(SystemMessage.errSystemError);
       }
     } catch (_) {
-      yield ErrorState("Oops.. Something went wrong!");
+      yield ErrorState(SystemMessage.errSystemError);
     }
   }
 
   Stream<StaffAuthInitState> _mapSetPinCodeEvent(SetPinCodeEvent event) async* {
     try {
+      yield LoadingState();
+
       if (event.pinCode != null) {
-        _data = event.pinCode;
-        yield PreviewDataState(
-          nfc: false,
-          data: event.pinCode,
-          staff: _staff,
-        );
+        bool _check = await _checkDataDuplication(event.pinCode);
+        if (!_check) {
+          _data = event.pinCode;
+          yield PreviewDataState(
+            nfc: false,
+            data: event.pinCode,
+            staff: staff,
+          );
+        } else {
+          yield DuplicateDataState(nfc: nfc, data: event.pinCode);
+        }
       } else {
-        yield ErrorState("Oops.. Something went wrong!");
+        yield ErrorState(SystemMessage.errSystemError);
       }
     } catch (_) {
-      yield ErrorState("Oops.. Something went wrong!");
+      yield ErrorState(SystemMessage.errSystemError);
     }
   }
 
   Stream<StaffAuthInitState> _mapConfirmDataEvent() async* {
     try {
+      yield LoadingState();
+
       var data = {
-        "staff_id": _staff.id,
-        "set": _nfc ? "nfc" : "pin",
+        "staff_id": staff.id,
+        "set": nfc ? "nfc" : "pin",
       };
 
-      if (_nfc) {
+      if (nfc) {
         data["nfc"] = _data;
       } else {
         data["pin"] = _data;
       }
 
-      final _headers = {"x-api-key": "$_deviceName${Const.apiKey}"};
+      final _headers = {"x-api-key": "$deviceName${Const.apiKey}"};
 
       Response _response = await Dio().post(
         Const.serverURL,
@@ -123,18 +138,53 @@ class StaffAuthInitBloc extends Bloc<StaffAuthInitEvent, StaffAuthInitState> {
         var _resData = json.decode(_response.data);
 
         if (_resData["result"] != null) {
-          String _message = _nfc ? "NFC " : "Pin code ";
-          _message += "for ${_staff.name} updated!";
+          String _message = nfc ? "NFC " : "Pin code ";
+          _message += "for ${staff.name} updated!";
           yield SuccessState(_message);
         } else {
-          yield ErrorState("Oops.. Something went wrong!");
+          yield ErrorState(SystemMessage.errSystemError);
         }
       } else {
-        yield ErrorState("Oops.. Something went wrong!");
+        yield ErrorState(SystemMessage.errSystemError);
       }
     } catch (error) {
       print(error);
-      yield ErrorState("Oops.. Something went wrong!");
+    }
+  }
+
+  Future<bool> _checkDataDuplication(String _value) async {
+    try {
+      final data = {"get": "staff"};
+
+      final _headers = {"x-api-key": "$deviceName${Const.apiKey}"};
+
+      Response _response = await Dio().post(
+        Const.serverURL,
+        queryParameters: data,
+        options: Options(headers: _headers),
+      );
+
+      if (_response.statusCode == 200) {
+        var _resData = json.decode(_response.data);
+
+        if (_resData["staff"] != null) {
+          bool _check = false;
+          for (var i in _resData["staff"]) {
+            if (nfc && i["nfc"] == _value) {
+              _check = true;
+            } else if (!nfc && i["pin"] == _value) {
+              _check = true;
+            }
+          }
+          return _check;
+        } else {
+          return false;
+        }
+      } else {
+        return false;
+      }
+    } catch (_) {
+      return false;
     }
   }
 }

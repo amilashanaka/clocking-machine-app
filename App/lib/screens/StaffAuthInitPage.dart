@@ -19,10 +19,11 @@ class StaffAuthInitPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => StaffAuthInitBloc()
-        ..add(nfc
-            ? InitialNfcEvent(staff: staff, deviceName: deviceName)
-            : InitialPinCodeEvent(staff: staff, deviceName: deviceName)),
+      create: (context) => StaffAuthInitBloc(
+        staff: staff,
+        deviceName: deviceName,
+        nfc: nfc,
+      )..add(nfc ? InitialNfcEvent() : InitialPinCodeEvent()),
       child: _StaffAuthInitPageWidget(),
     );
   }
@@ -43,6 +44,10 @@ class __StaffAuthInitPageWidgetState extends State<_StaffAuthInitPageWidget>
     authContext = context;
     _staffAuthInitBloc = BlocProvider.of<StaffAuthInitBloc>(context);
     super.initState();
+  }
+
+  void _onPressedRetry(bool _nfc) {
+    _staffAuthInitBloc.add(_nfc ? InitialNfcEvent() : InitialPinCodeEvent());
   }
 
   void _onPressedSendPinCode() {
@@ -94,6 +99,12 @@ class __StaffAuthInitPageWidgetState extends State<_StaffAuthInitPageWidget>
                               data: state.data,
                               staff: state.staff,
                               onPressedConfirmData: _onPressedConfirmData,
+                            );
+                          } else if (state is DuplicateDataState) {
+                            return showDuplicatedDataWidget(
+                              data: state.data,
+                              nfc: state.nfc,
+                              retryOnPressed: _onPressedRetry,
                             );
                           } else if (state is SuccessState) {
                             return showMessageWidget(false, state.message);
