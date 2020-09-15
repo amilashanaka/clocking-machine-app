@@ -1,23 +1,19 @@
 import 'dart:async';
 import 'dart:convert';
-// import 'dart:io';
+import 'dart:io';
 
 import 'package:ClockIN/const.dart';
 import 'package:ClockIN/util/device_checker.dart';
 import 'package:ClockIN/util/system_message.dart';
-// import 'package:ClockIN/graphql/g_actions.dart';
 import 'package:bloc/bloc.dart';
-// import 'package:camera/camera.dart';
+import 'package:camera/camera.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-// import 'package:http/http.dart';
-// import 'package:http_parser/http_parser.dart';
-// import 'package:path/path.dart' show join;
+import 'package:path/path.dart' show join;
 import 'package:flutter_nfc_reader/flutter_nfc_reader.dart';
 import 'package:meta/meta.dart';
 import 'package:ClockIN/data/staff/staff.dart';
-// import 'package:path_provider/path_provider.dart';
-// import 'package:uuid/uuid.dart';
+import 'package:path_provider/path_provider.dart';
 
 part 'staff_auth_event.dart';
 part 'staff_auth_state.dart';
@@ -28,9 +24,8 @@ class StaffAuthBloc extends Bloc<StaffAuthEvent, StaffAuthState> {
   }) : super(LoadingState());
 
   Staff _staff;
-  // String _imagePath;
-  // CameraController _cameraController;
-  // GActions _actions = GActions();
+  String _imagePath;
+  CameraController _cameraController;
   bool _nfc;
   String deviceName;
 
@@ -61,20 +56,19 @@ class StaffAuthBloc extends Bloc<StaffAuthEvent, StaffAuthState> {
         yield ScanningNfcState();
         _nfc = true;
 
-        // _imagePath = "";
+        _imagePath = "";
 
         final nfcData = await FlutterNfcReader.read();
 
         if (nfcData != null) {
-          // String _image = await _captureImage();
-          // _imagePath = _image;
+          String _image = await _captureImage();
+          _imagePath = _image;
 
-          // if (_image == null || _image == "") {
-          //   yield ErrorState("Oops.. Something went wrong!");
-          //   return;
-          // }
+          if (_image == null || _image == "") {
+            yield ErrorState("Oops.. Something went wrong!");
+            return;
+          }
 
-          // _staff = await _actions.getStaffId(rfid: nfcData.id);
           _staff = await _checkStaff(nfc: nfcData.id);
 
           if (_staff != null) {
@@ -116,8 +110,7 @@ class StaffAuthBloc extends Bloc<StaffAuthEvent, StaffAuthState> {
       yield LoadingState();
       _nfc = false;
 
-      // _imagePath = "";
-      // _staff = await _actions.getStaffId(pinCode: event.pinCode);
+      _imagePath = "";
       _staff = await _checkStaff(pinCode: event.pinCode);
 
       if (_staff != null) {
@@ -135,17 +128,25 @@ class StaffAuthBloc extends Bloc<StaffAuthEvent, StaffAuthState> {
       yield LoadingState();
 
       final action = inAction ? "in" : "out";
-      // final fileAvailable = (_imagePath != null && _imagePath != "");
+      final fileAvailable = (_imagePath != null && _imagePath != "");
+
       var _data = {
         "source": _nfc ? "nfc" : "pin",
         "staff_id": _staff.id,
         "clocking": DateTime.now().toString().split(".")[0],
       };
+
+      if (fileAvailable) {
+        List<int> imageBytes = File(_imagePath).readAsBytesSync();
+        String base64Image = base64Encode(imageBytes);
+        _data["photo"] = base64Image;
+      }
+
       final _headers = {"x-api-key": "$deviceName${Const.apiKey}"};
 
       Response response = await Dio().post(
         Const.serverURL,
-        queryParameters: _data,
+        data: _data,
         options: Options(headers: _headers),
       );
 
@@ -154,63 +155,32 @@ class StaffAuthBloc extends Bloc<StaffAuthEvent, StaffAuthState> {
       } else {
         yield ErrorState(SystemMessage.errSystemError);
       }
-
-      // if (fileAvailable) {
-      //   var byteData = File(_imagePath).readAsBytesSync();
-
-      // var multipartFile = MultipartFile.fromBytes(
-      //   'photo',
-      //   byteData,
-      //   filename: '${DateTime.now().second}.png',
-      //   contentType: MediaType("image", "png"),
-      // );
-
-      // _data = {
-      //   "image_file": multipartFile,
-      // };
-      // } else {
-      //   _data = null;
-      // }
-
-      // final result = await _actions.setStaffInOut(
-      //   staffId: _staff.id,
-      //   action: action,
-      //   fileAvailable: fileAvailable,
-      //   imageFileName: Uuid().v4(),
-      //   data: _data,
-      // );
-
-      // if (result != null) {
-      //   yield SuccessState("You have registered as ${action.toUpperCase()}");
-      // } else {
-      //   yield ErrorState("Oops.. Something went wrong!");
-      // }
     } catch (_) {
       yield ErrorState(SystemMessage.errSystemError);
     }
   }
 
-  // Future<String> _captureImage() async {
-  //   try {
-  //     final cameras = await availableCameras();
-  //     _cameraController = CameraController(
-  //       cameras.last,
-  //       ResolutionPreset.medium,
-  //       enableAudio: false,
-  //     );
+  Future<String> _captureImage() async {
+    try {
+      final cameras = await availableCameras();
+      _cameraController = CameraController(
+        cameras.last,
+        ResolutionPreset.medium,
+        enableAudio: false,
+      );
 
-  //     await _cameraController.initialize();
+      await _cameraController.initialize();
 
-  //     final path =
-  //         join((await getTemporaryDirectory()).path, '${DateTime.now()}.png');
+      final path = join((await getTemporaryDirectory()).path,
+          '${DateTime.now().toString().split(".")[0]}.png');
 
-  //     await _cameraController.takePicture(path);
+      await _cameraController.takePicture(path);
 
-  //     return path;
-  //   } catch (_) {
-  //   return null;
-  //   }
-  // }
+      return path;
+    } catch (_) {
+      return null;
+    }
+  }
 
   Future<Staff> _checkStaff({String nfc, String pinCode}) async {
     try {
