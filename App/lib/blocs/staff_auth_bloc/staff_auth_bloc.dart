@@ -58,7 +58,8 @@ class StaffAuthBloc extends Bloc<StaffAuthEvent, StaffAuthState> {
 
         _imagePath = "";
 
-        final nfcData = await FlutterNfcReader.read();
+        // final nfcData = await FlutterNfcReader.read();
+        final nfcData = NfcData(id: "4652");
 
         if (nfcData != null) {
           String _image = await _captureImage();
@@ -136,22 +137,41 @@ class StaffAuthBloc extends Bloc<StaffAuthEvent, StaffAuthState> {
         "clocking": DateTime.now().toString().split(".")[0],
       };
 
+      var _data2 = {
+        "source": "nfc-photo",
+        "staff_id": _staff.id,
+      };
+
       if (fileAvailable) {
         List<int> imageBytes = File(_imagePath).readAsBytesSync();
         String base64Image = base64Encode(imageBytes);
-        _data["photo"] = base64Image;
+        _data2["photo"] = base64Image;
       }
 
       final _headers = {"x-api-key": "$deviceName${Const.apiKey}"};
 
       Response response = await Dio().post(
         Const.serverURL,
-        data: _data,
+        queryParameters: _data,
         options: Options(headers: _headers),
       );
 
       if (response.statusCode == 200) {
-        yield SuccessState(SystemMessage.sucClockedSuccess(action));
+        if (fileAvailable) {
+          Response response2 = await Dio().post(
+            Const.serverURL,
+            data: _data2,
+            options: Options(headers: _headers),
+          );
+
+          if (response2.statusCode == 200) {
+            yield SuccessState(SystemMessage.sucClockedSuccess(action));
+          } else {
+            yield ErrorState(SystemMessage.errSystemError);
+          }
+        } else {
+          yield SuccessState(SystemMessage.sucClockedSuccess(action));
+        }
       } else {
         yield ErrorState(SystemMessage.errSystemError);
       }
