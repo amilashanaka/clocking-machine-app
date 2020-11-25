@@ -58,8 +58,8 @@ class StaffAuthBloc extends Bloc<StaffAuthEvent, StaffAuthState> {
 
         _imagePath = "";
 
-        // final nfcData = await FlutterNfcReader.read();
-        final nfcData = NfcData(id: "4652");
+     final nfcData = await FlutterNfcReader.read();
+      //  final nfcData = NfcData(id: "4652");
 
         if (nfcData != null) {
           String _image = await _captureImage();

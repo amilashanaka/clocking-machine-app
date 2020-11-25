@@ -5,7 +5,6 @@ import 'package:ClockIN/data/user/user_dao.dart';
 import 'package:ClockIN/util/system_message.dart';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
-
 part 'auth_event.dart';
 part 'auth_state.dart';
 
